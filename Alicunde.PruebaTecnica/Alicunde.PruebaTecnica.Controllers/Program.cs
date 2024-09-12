@@ -1,4 +1,7 @@
+using Alicunde.PruebaTecnica.Database;
+using Alicunde.PruebaTecnica.Services.Repositories;
 using Alicunde.PruebaTecnica.Services.Services;
+using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +13,9 @@ builder.Services.AddControllers();
 builder.Services.AddHttpClient("opendata",
     client => { client.BaseAddress = new Uri("https://api.opendata.esett.com/"); });
 builder.Services.AddScoped<RetailerService>();
+builder.Services.AddScoped<RetailerRepository>();
+builder.Services.AddDbContext<RetailersContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("RetailerConnection")));
 
 WebApplication app = builder.Build();
 

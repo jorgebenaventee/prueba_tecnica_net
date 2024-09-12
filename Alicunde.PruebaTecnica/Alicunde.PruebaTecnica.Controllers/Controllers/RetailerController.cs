@@ -7,10 +7,22 @@ namespace Alicunde.PruebaTecnica.Controllers.Controllers;
 [ApiController, Route("api/[controller]")]
 public class RetailerController(RetailerService retailerService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> GetRetailers()
+    [HttpPost("fetch-retailers")]
+    public async Task<IActionResult> FetchRetailers()
     {
-        List<Retailer> retailers = await retailerService.GetRetailers();
-        return Ok(retailers);
+        await retailerService.FetchRetailers();
+        return NoContent();
+    }
+
+    [HttpGet("{reCode}")]
+    public async Task<IActionResult> GetRetailer(string reCode)
+    {
+        RetailerDto? retailer = await retailerService.Find(reCode);
+        if (retailer is null)
+        {
+            return NotFound();
+        }
+
+        return Ok(retailer);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Alicunde.PruebaTecnica.Services.DTOs;
 
-public class Retailer
+public class RetailerDto
 {
     public string ReName { get; set; }
 

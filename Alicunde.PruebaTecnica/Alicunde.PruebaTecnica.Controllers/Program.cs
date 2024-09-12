@@ -1,4 +1,6 @@
+using System.Text.Json;
 using Alicunde.PruebaTecnica.Database;
+using Alicunde.PruebaTecnica.Services.Exceptions;
 using Alicunde.PruebaTecnica.Services.Repositories;
 using Alicunde.PruebaTecnica.Services.Services;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,31 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.Use(async (context, next) =>
+{
+    try
+    {
+        await next();
+    }
+    catch (Exception ex)
+    {
+        if (ex is InvalidRemoteResponseException)
+        {
+            context.Response.StatusCode = StatusCodes.Status503ServiceUnavailable;
+            context.Response.ContentType = "text/plain";
+            var error = new { error = "The remote server returned an unexpected response. Please, try again later." };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(error));
+        }
+        else
+        {
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "text/plain";
+            var error = new { error = "An unexpected error occurred. Please, try again later." };
+            await context.Response.WriteAsync(JsonSerializer.Serialize(error));
+        }
+    }
+});
 
 app.UseAuthorization();
 app.MapControllers();

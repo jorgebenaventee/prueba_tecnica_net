@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Alicunde.PruebaTecnica.Database.Models;
 using Alicunde.PruebaTecnica.Services.DTOs;
+using Alicunde.PruebaTecnica.Services.Exceptions;
 using Alicunde.PruebaTecnica.Services.Repositories;
 
 namespace Alicunde.PruebaTecnica.Services.Services;
@@ -15,7 +16,10 @@ public class RetailerService(IHttpClientFactory httpClientFactory, RetailerRepos
     public async Task FetchRetailers()
     {
         HttpResponseMessage response = await _httpClient.GetAsync("EXP01/Retailers");
-        response.EnsureSuccessStatusCode();
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new InvalidRemoteResponseException();
+        }
         List<RetailerDto>? retailers = await response.Content.ReadFromJsonAsync<List<RetailerDto>>();
         if (retailers is null)
         {

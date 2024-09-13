@@ -46,4 +46,9 @@ public class RetailerRepository(RetailersContext context)
         Retailer? retailer = await context.Retailers.FirstOrDefaultAsync(r => r.ReCode == reCode);
         return retailer;
     }
+    
+    public async Task<List<Retailer>> GetAll()
+    {
+        return await context.Retailers.ToListAsync();
+    }
 }

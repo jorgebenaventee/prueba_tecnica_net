@@ -53,4 +53,20 @@ public class RetailerService(IHttpClientFactory httpClientFactory, RetailerRepos
             ReCode = retailer.ReCode
         };
     }
+    
+    /// <summary>
+    /// This method fetches all the retailers from the database
+    /// </summary>
+    /// <returns>A list of retailers</returns>
+    public async Task<List<RetailerDto>> GetAll()
+    {
+        List<Retailer> retailers = await retailerRepository.GetAll();
+        return retailers.Select(r => new RetailerDto
+        {
+            ReName = r.ReName,
+            Country = r.Country,
+            CodingScheme = r.CodingScheme,
+            ReCode = r.ReCode
+        }).ToList();
+    }
 }

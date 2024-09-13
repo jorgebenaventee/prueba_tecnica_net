@@ -25,4 +25,11 @@ public class RetailerController(RetailerService retailerService) : ControllerBas
 
         return Ok(retailer);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAllRetailers()
+    {
+        List<RetailerDto> retailers = await retailerService.GetAll();
+        return Ok(retailers);
+    }
 }

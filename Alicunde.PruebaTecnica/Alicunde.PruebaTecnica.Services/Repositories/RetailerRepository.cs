@@ -47,6 +47,10 @@ public class RetailerRepository(RetailersContext context)
         return retailer;
     }
     
+    /// <summary>
+    /// This method fetches all the retailers from the database
+    /// </summary>
+    /// <returns>A list of retailers</returns>
     public async Task<List<Retailer>> GetAll()
     {
         return await context.Retailers.ToListAsync();
